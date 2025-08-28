@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Temperature Prediction</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="header-content">
+                <i class="fas fa-cloud-sun weather-icon"></i>
+                <h1>Weather Temperature Predictor</h1>
+                <p>Advanced ML-powered temperature forecasting for Basel</p>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <div class="prediction-card">
+                <div class="card-header">
+                    <h2><i class="fas fa-thermometer-half"></i> Predict Temperature</h2>
+                    <p>Enter the weather parameters below to get an accurate temperature prediction</p>
+                </div>
+
+                <form id="prediction-form" class="prediction-form">
+                    <div class="form-grid">
+                        <div class="input-group">
+                            <label for="lag1">
+                                <i class="fas fa-calendar-day"></i>
+                                Temperature 1 Day Ago (°C)
+                            </label>
+                            <input type="number" id="lag1" name="BASEL_temp_mean_lag1" 
+                                   step="0.1" placeholder="e.g., 15.5" required>
+                            <small>Temperature from yesterday</small>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="lag3">
+                                <i class="fas fa-calendar-alt"></i>
+                                Temperature 3 Days Ago (°C)
+                            </label>
+                            <input type="number" id="lag3" name="BASEL_temp_mean_lag3" 
+                                   step="0.1" placeholder="e.g., 14.2" required>
+                            <small>Temperature from 3 days ago</small>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="lag7">
+                                <i class="fas fa-calendar-week"></i>
+                                Temperature 7 Days Ago (°C)
+                            </label>
+                            <input type="number" id="lag7" name="BASEL_temp_mean_lag7" 
+                                   step="0.1" placeholder="e.g., 12.8" required>
+                            <small>Temperature from a week ago</small>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="roll7">
+                                <i class="fas fa-chart-line"></i>
+                                7-Day Average Temperature (°C)
+                            </label>
+                            <input type="number" id="roll7" name="BASEL_temp_mean_roll7" 
+                                   step="0.1" placeholder="e.g., 13.8" required>
+                            <small>Average temperature over past 7 days</small>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="month">
+                                <i class="fas fa-calendar-month"></i>
+                                Month (1-12)
+                            </label>
+                            <select id="month" name="month" required>
+                                <option value="">Select Month</option>
+                                <option value="1">January</option>
+                                <option value="2">February</option>
+                                <option value="3">March</option>
+                                <option value="4">April</option>
+                                <option value="5">May</option>
+                                <option value="6">June</option>
+                                <option value="7">July</option>
+                                <option value="8">August</option>
+                                <option value="9">September</option>
+                                <option value="10">October</option>
+                                <option value="11">November</option>
+                                <option value="12">December</option>
+                            </select>
+                            <small>Current month</small>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="dayofyear">
+                                <i class="fas fa-calendar-days"></i>
+                                Day of Year (1-366)
+                            </label>
+                            <input type="number" id="dayofyear" name="dayofyear" 
+                                   min="1" max="366" placeholder="e.g., 125" required>
+                            <small>Day number in the year</small>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="predict-btn">
+                            <i class="fas fa-brain"></i>
+                            Predict Temperature
+                        </button>
+                        <button type="button" id="clear-btn" class="clear-btn">
+                            <i class="fas fa-eraser"></i>
+                            Clear Form
+                        </button>
+                    </div>
+                </form>
+
+                <div id="result-section" class="result-section hidden">
+                    <div class="result-header">
+                        <h3><i class="fas fa-chart-bar"></i> Prediction Result</h3>
+                    </div>
+                    <div class="result-content">
+                        <div class="temperature-display">
+                            <span id="predicted-temp" class="temp-value">--°C</span>
+                            <span class="temp-label">Predicted Temperature</span>
+                        </div>
+                        <div class="result-details">
+                            <div class="detail-item">
+                                <i class="fas fa-location-dot"></i>
+                                <span>Location: Basel, Switzerland</span>
+                            </div>
+                            <div class="detail-item">
+                                <i class="fas fa-clock"></i>
+                                <span id="prediction-time">Prediction made at: --</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="loading-section" class="loading-section hidden">
+                    <div class="spinner"></div>
+                    <p>Analyzing weather patterns...</p>
+                </div>
+
+                <div id="error-section" class="error-section hidden">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <p id="error-message">Something went wrong. Please try again.</p>
+                </div>
+            </div>
+
+            <div class="info-section">
+                <div class="info-card">
+                    <h3><i class="fas fa-info-circle"></i> About This Predictor</h3>
+                    <p>This advanced machine learning model analyzes historical temperature patterns 
+                       and seasonal trends to provide accurate temperature predictions for Basel, Switzerland. 
+                       The model uses Support Vector Regression (SVR) trained on comprehensive weather data.</p>
+                </div>
+                
+                <div class="tips-card">
+                    <h3><i class="fas fa-lightbulb"></i> Tips for Best Results</h3>
+                    <ul>
+                        <li>Ensure temperature values are realistic for Basel's climate</li>
+                        <li>Use actual historical temperatures for better accuracy</li>
+                        <li>The 7-day rolling average should be consistent with individual day temperatures</li>
+                        <li>Double-check that the day of year matches your selected month</li>
+                    </ul>
+                </div>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <p>&copy; 2025 Weather Temperature Predictor. Powered by FastAPI & Machine Learning</p>
+        </footer>
+    </div>
+
+    <script src="/static/script.js"></script>
+</body>
+</html>
